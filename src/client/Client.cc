@@ -2195,7 +2195,7 @@ void Client::send_reconnect(MetaSession *session)
     session->release = NULL;
   }
 
-  MClientReconnect *m = new MClientReconnect;
+  MClientReconnect *m = new MClientReconnect(cap_epoch_barrier);
 
   // i have an open session.
   ceph::unordered_set<inodeno_t> did_snaprealm;

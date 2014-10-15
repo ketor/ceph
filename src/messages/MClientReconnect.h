@@ -21,14 +21,17 @@
 
 
 class MClientReconnect : public Message {
-
-  const static int HEAD_VERSION = 3;
+  const static int COMPAT_VERSION = 0;  // Set implicitly from header.version in encode_payload
+  const static int HEAD_VERSION = 4;
 
 public:
   map<inodeno_t, cap_reconnect_t>  caps;   // only head inodes
   vector<ceph_mds_snaprealm_reconnect> realms;
+  epoch_t osd_epoch_barrier;
 
-  MClientReconnect() : Message(CEPH_MSG_CLIENT_RECONNECT, HEAD_VERSION) { }
+  MClientReconnect(epoch_t oeb)
+    : Message(CEPH_MSG_CLIENT_RECONNECT, HEAD_VERSION, COMPAT_VERSION), osd_epoch_barrier(oeb) { }
+  MClientReconnect() : Message(CEPH_MSG_CLIENT_RECONNECT, HEAD_VERSION, COMPAT_VERSION) { }
 private:
   ~MClientReconnect() {}
 
@@ -56,6 +59,7 @@ public:
     data.clear();
     if (features & CEPH_FEATURE_MDSENC) {
       ::encode(caps, data);
+      ::encode(osd_epoch_barrier, data);
     } else if (features & CEPH_FEATURE_FLOCK) {
       // encode with old cap_reconnect_t encoding
       __u32 n = caps.size();
@@ -80,6 +84,9 @@ public:
     if (header.version >= 3) {
       // new protocol
       ::decode(caps, p);
+      if (header.version >= 4) {
+        ::decode(osd_epoch_barrier, p);
+      }
     } else if (header.version == 2) {
       __u32 n;
       ::decode(n, p);
