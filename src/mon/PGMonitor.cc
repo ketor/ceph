@@ -1113,10 +1113,12 @@ void PGMonitor::map_pg_creates()
       if (pg_map.creating_pgs_by_osd[s.acting_primary].size() == 0)
         pg_map.creating_pgs_by_osd.erase(s.acting_primary);
     }
+    pg_map.stat_pg_sub(pgid, s);
     s.up = up;
     s.up_primary = up_primary;
     s.acting = acting;
     s.acting_primary = acting_primary;
+    pg_map.stat_pg_add(pgid, s);
 
     // don't send creates for localized pgs
     if (pgid.preferred() >= 0)
