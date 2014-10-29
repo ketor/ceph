@@ -1695,8 +1695,13 @@ public:
   void ms_fast_dispatch(Message *m) {
     ms_dispatch(m);
   }
+  
+  void AckFinish(Context *c, int rc);
+  void CommitFinish(Context *c, int rc);
 
   void handle_osd_op_reply(class MOSDOpReply *m);
+  void handle_osd_op_reply111(class MOSDOpReply *m);
+  void handle_osd_op_reply222(class MOSDOpReply *m);
   void handle_osd_map(class MOSDMap *m);
   void wait_for_osd_map();
 

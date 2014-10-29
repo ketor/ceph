@@ -2982,7 +2982,7 @@ reprotect_and_return_err:
     // map
     vector<ObjectExtent> extents;
     if (len > 0) {
-      Striper::file_to_extents(ictx->cct, ictx->format_string,
+      Striper::file_to_extents111(ictx->cct, ictx->format_string,
 			       &ictx->layout, off, mylen, 0, extents);
     }
 

@@ -39,7 +39,11 @@ class CephContext;
 				uint64_t offset, uint64_t len, uint64_t trunc_size,
 				vector<ObjectExtent>& extents,
 				uint64_t buffer_offset=0);
-
+    static void file_to_extents111(CephContext *cct, const char *object_format,
+				const ceph_file_layout *layout,
+				uint64_t offset, uint64_t len, uint64_t trunc_size,
+				vector<ObjectExtent>& extents,
+				uint64_t buffer_offset=0);
     static void file_to_extents(CephContext *cct, inodeno_t ino,
 				const ceph_file_layout *layout,
 				uint64_t offset, uint64_t len, uint64_t trunc_size,
